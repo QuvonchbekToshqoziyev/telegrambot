@@ -1,4 +1,4 @@
-import { bot } from "../bot/bot.js";
+import { getBot } from "../bot/bot.js";
 import { UserDatabase, RegistrationState } from "../database/users.db.js";
 import { isAdmin, isSuperAdmin } from "./adminUtils.js";
 import { CHANNEL_ID, CHANNEL_LINK, STATES } from "./constants.js";
@@ -13,6 +13,11 @@ if (!CHANNEL_ID || !CHANNEL_LINK) {
 }
 
 export const setupRegistrationFlow = () => {
+    const bot = getBot();
+    if (!bot) {
+        throw new Error("Bot not initialized");
+    }
+    
     bot.start(async (ctx) => {
         const existingUser = await UserDatabase.getUserByTelegramId(ctx.from.id);
         if (existingUser) {

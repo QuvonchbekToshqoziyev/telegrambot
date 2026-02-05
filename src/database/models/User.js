@@ -1,53 +1,40 @@
-import mongoose from "mongoose";
+// User model for PostgreSQL
+// This is a simple class representation of a User
+// The actual table is created in config.js
 
-const userSchema = new mongoose.Schema({
-    telegramId: {
-        type: Number,
-        required: true,
-        unique: true,
-        index: true
-    },
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-        minlength: 3,
-        maxlength: 20,
-        lowercase: true,
-        index: true
-    },
-    phone: {
-        type: String,
-        required: true
-    },
-    region: {
-        type: String,
-        required: true,
-        default: "Noma'lum"
-    },
-    isAdmin: {
-        type: Boolean,
-        default: false,
-        index: true
-    },
-    isSuperAdmin: {
-        type: Boolean,
-        default: false
-    },
-    joinedAt: {
-        type: Date,
-        default: Date.now
-    },
-    channelJoinedAt: {
-        type: Date,
-        default: Date.now
-    },
-    lastActivity: {
-        type: Date,
-        default: Date.now
+export class User {
+    constructor(data) {
+        this.id = data.id;
+        this.telegramId = data.telegram_id || data.telegramId;
+        this.username = data.username;
+        this.phone = data.phone;
+        this.region = data.region || "Noma'lum";
+        this.isAdmin = data.is_admin || data.isAdmin || false;
+        this.isSuperAdmin = data.is_super_admin || data.isSuperAdmin || false;
+        this.joinedAt = data.joined_at || data.joinedAt;
+        this.channelJoinedAt = data.channel_joined_at || data.channelJoinedAt;
+        this.lastActivity = data.last_activity || data.lastActivity;
+        this.createdAt = data.created_at || data.createdAt;
+        this.updatedAt = data.updated_at || data.updatedAt;
     }
-}, { timestamps: true });
 
-export const User = mongoose.model("User", userSchema);
+    // Convert snake_case DB fields to camelCase
+    static fromDB(row) {
+        if (!row) return null;
+        return new User(row);
+    }
+
+    // Convert camelCase to snake_case for DB
+    toDB() {
+        return {
+            telegram_id: this.telegramId,
+            username: this.username.toLowerCase(),
+            phone: this.phone,
+            region: this.region,
+            is_admin: this.isAdmin,
+            is_super_admin: this.isSuperAdmin
+        };
+    }
+}
 
 export default User;

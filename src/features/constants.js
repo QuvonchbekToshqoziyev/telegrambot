@@ -13,7 +13,7 @@ export const REGIONS = [
     "Toshkent"
 ];
 
-export const CHANNEL_ID = process.env.CHANNEL_ID;
+export const CHANNEL_ID = process.env.CHANNEL_ID ? parseInt(process.env.CHANNEL_ID) : null;
 export const CHANNEL_LINK = process.env.CHANNEL_LINK;
 
 export const STATES = {

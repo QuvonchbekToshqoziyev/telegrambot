@@ -1,15 +1,28 @@
 import { Telegraf } from "telegraf";
-import { config } from "dotenv"
-config()
 
-const bot = new Telegraf(process.env.TG_BOT_TOKEN)
-async function initBot() {
-    bot.launch()
-    console.log("bot is running")
-}
+let bot = null;
 
-export {
-    initBot,
-    bot
-}
+export const getBot = () => bot;
+
+export const initBot = async () => {
+    if (!process.env.TG_BOT_TOKEN) {
+        throw new Error("TG_BOT_TOKEN is not set in environment");
+    }
+    
+    bot = new Telegraf(process.env.TG_BOT_TOKEN);
+    
+    try {
+        // Don't wait for bot.launch() - it runs indefinitely
+        // Just start it asynchronously
+        bot.launch().catch(error => {
+            console.error("❌ Bot error:", error.message);
+        });
+        
+        console.log("✅ Bot launched successfully");
+        return bot;
+    } catch (error) {
+        console.error("❌ Bot initialization failed:", error.message);
+        throw error;
+    }
+};
 
