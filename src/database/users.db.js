@@ -61,6 +61,30 @@ export class UserDatabase {
         }
     }
 
+    static async getAllAdmins() {
+        try {
+            const result = await pool.query(
+                "SELECT * FROM users WHERE is_admin = true OR is_super_admin = true ORDER BY joined_at DESC"
+            );
+            return result.rows.map(row => User.fromDB(row));
+        } catch (error) {
+            console.error("Error getting all admins:", error);
+            return [];
+        }
+    }
+
+    static async getSuperAdmin() {
+        try {
+            const result = await pool.query(
+                "SELECT * FROM users WHERE is_super_admin = true LIMIT 1"
+            );
+            return result.rows.length > 0 ? User.fromDB(result.rows[0]) : null;
+        } catch (error) {
+            console.error("Error getting superadmin:", error);
+            return null;
+        }
+    }
+
     static async updateUser(telegramId, updates) {
         try {
             // Build dynamic UPDATE query
@@ -151,6 +175,27 @@ export class RegistrationState {
     }
 }
 
+export class ChatState {
+    static chats = new Map();
+    
+    static setChat(userId, targetId, role) {
+        // role: 'user', 'admin', 'superadmin'
+        this.chats.set(userId, { targetId, role, timestamp: Date.now() });
+    }
+    
+    static getChat(userId) {
+        return this.chats.get(userId);
+    }
+    
+    static clearChat(userId) {
+        this.chats.delete(userId);
+    }
+    
+    static hasActiveChat(userId) {
+        return this.chats.has(userId);
+    }
+}
+
 export const initializeSuperAdmin = async () => {
     const superAdminId = process.env.SUPERADMIN_ID ? parseInt(process.env.SUPERADMIN_ID) : null;
     if (superAdminId) {
@@ -175,5 +220,6 @@ export const initializeSuperAdmin = async () => {
 
 export default {
     UserDatabase,
-    RegistrationState
+    RegistrationState,
+    ChatState
 };

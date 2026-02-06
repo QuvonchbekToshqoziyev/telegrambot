@@ -40,8 +40,21 @@
 3. **Update `.env` file:**
    ```env
    DATABASE_URL=postgresql://postgres:your_new_password@localhost:5432/tgbot
+   CHANNEL_ID=-1001234567890
+   CHANNEL_LINK=https://t.me/yourchannel
+   BASE_CHANNEL_ID=-1009876543210
+   BASE_CHANNEL_LINK=https://t.me/yourbasechannel
+   SUPERADMIN_ID=123456789
+   TG_BOT_TOKEN=your_bot_token_here
    ```
-   Replace `your_new_password` with your actual PostgreSQL password.
+   Replace:
+   - `your_new_password` with your actual PostgreSQL password
+   - `CHANNEL_ID` - Main channel ID for membership verification (numeric with minus)
+   - `CHANNEL_LINK` - Main channel invite link
+   - `BASE_CHANNEL_ID` - Base channel ID where all files are posted (numeric with minus)
+   - `BASE_CHANNEL_LINK` - Base channel invite link
+   - `SUPERADMIN_ID` - Your Telegram user ID (get from @userinfobot)
+   - `TG_BOT_TOKEN` - Your bot token from @BotFather
 
 ### Option 2: Quick Test (No PostgreSQL)
 

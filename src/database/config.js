@@ -1,7 +1,7 @@
 import pg from "pg";
 import { config } from "dotenv";
 
-config();
+config({ silent: true });
 
 const { Pool } = pg;
 
@@ -18,9 +18,7 @@ export const pool = new Pool({
 export const connectDB = async () => {
     try {
         const client = await pool.connect();
-        console.log("✅ PostgreSQL connected successfully");
         
-        // Create users table if it doesn't exist
         await client.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -46,9 +44,6 @@ export const connectDB = async () => {
         return pool;
     } catch (error) {
         console.error("❌ PostgreSQL connection failed:", error.message);
-        console.log("⚠️ Please check your DATABASE_URL in .env file");
-        console.log("⚠️ Format: postgresql://username:password@localhost:5432/dbname");
-        console.log("⚠️ Continuing without PostgreSQL - bot will run but user data won't persist");
         return null;
     }
 };
@@ -56,7 +51,6 @@ export const connectDB = async () => {
 export const disconnectDB = async () => {
     try {
         await pool.end();
-        console.log("✅ PostgreSQL disconnected");
     } catch (error) {
         console.error("❌ PostgreSQL disconnection failed:", error.message);
     }

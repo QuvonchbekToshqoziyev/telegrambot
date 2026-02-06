@@ -1,6 +1,6 @@
 import { UserDatabase, RegistrationState } from "../database/users.db.js";
 import { REGIONS, STATES } from "./constants.js";
-import { getContactKeyboard, getRegionKeyboard, getUpdateInfoKeyboard } from "./keyboards.js";
+import { getContactKeyboard, getRegionKeyboard, getUpdateInfoKeyboard, getCancelKeyboard } from "./keyboards.js";
 import { sendUserInfo } from "./userInfo.js";
 
 export const askForUsername = (ctx) => {

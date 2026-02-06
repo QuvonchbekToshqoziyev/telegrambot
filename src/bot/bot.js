@@ -12,13 +12,10 @@ export const initBot = async () => {
     bot = new Telegraf(process.env.TG_BOT_TOKEN);
     
     try {
-        // Don't wait for bot.launch() - it runs indefinitely
-        // Just start it asynchronously
         bot.launch().catch(error => {
             console.error("❌ Bot error:", error.message);
         });
         
-        console.log("✅ Bot launched successfully");
         return bot;
     } catch (error) {
         console.error("❌ Bot initialization failed:", error.message);

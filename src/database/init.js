@@ -1,11 +1,10 @@
 import pg from "pg";
 import { config } from "dotenv";
 
-config();
+config({ silent: true });
 
 const { Pool } = pg;
 
-// Connect to default postgres database to create tgbot database
 const adminPool = new Pool({
     user: process.env.DB_USER || "postgres",
     password: process.env.DB_PASSWORD || "postgres",
@@ -14,7 +13,6 @@ const adminPool = new Pool({
     database: "postgres"
 });
 
-// Connect to app database to create tables
 const appPool = new Pool({
     user: process.env.DB_USER || "postgres",
     password: process.env.DB_PASSWORD || "postgres",
@@ -25,7 +23,6 @@ const appPool = new Pool({
 
 const initializeDatabase = async () => {
     try {
-        // Step 1: Create database if it doesn't exist
         const adminClient = await adminPool.connect();
         console.log("\u2705 Connected to PostgreSQL server");
 
@@ -44,11 +41,9 @@ const initializeDatabase = async () => {
         adminClient.release();
         await adminPool.end();
 
-        // Step 2: Create tables
         const appClient = await appPool.connect();
-        console.log("\u2705 Connected to app database");
+        console.log("✅ Connected to app database");
 
-        // Create users table
         await appClient.query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
@@ -65,9 +60,8 @@ const initializeDatabase = async () => {
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         `);
-        console.log("\u2705 Users table created/verified");
+        console.log("✅ Users table created/verified");
 
-        // Create indexes
         await appClient.query(`CREATE INDEX IF NOT EXISTS idx_telegram_id ON users(telegram_id)`);
         await appClient.query(`CREATE INDEX IF NOT EXISTS idx_username ON users(username)`);
         await appClient.query(`CREATE INDEX IF NOT EXISTS idx_is_admin ON users(is_admin)`);
@@ -76,11 +70,10 @@ const initializeDatabase = async () => {
         appClient.release();
         await appPool.end();
 
-        console.log("\u2705 Database initialization complete\n");
+        console.log("✅ Database initialization complete\n");
         process.exit(0);
     } catch (error) {
-        console.error("\u274c Database initialization failed:", error.message);
-        console.log("Make sure PostgreSQL is running and credentials are correct");
+        console.error("❌ Database initialization failed:", error.message);
         process.exit(1);
     }
 };

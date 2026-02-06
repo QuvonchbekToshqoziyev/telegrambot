@@ -26,9 +26,15 @@ npm install
 ```
 
 ### 4. Configure Environment
-Update your `.env` file with the PostgreSQL connection string:
+Update your `.env` file with the PostgreSQL connection string and channel settings:
 ```
 DATABASE_URL=postgresql://username:password@localhost:5432/tgbot
+CHANNEL_ID=-1001234567890
+CHANNEL_LINK=https://t.me/yourchannel
+BASE_CHANNEL_ID=-1009876543210
+BASE_CHANNEL_LINK=https://t.me/yourbasechannel
+SUPERADMIN_ID=123456789
+TG_BOT_TOKEN=your_bot_token_here
 ```
 
 Replace:
@@ -37,6 +43,12 @@ Replace:
 - `localhost` with your database host (if remote)
 - `5432` with your PostgreSQL port (if different)
 - `tgbot` with your database name (if different)
+- `CHANNEL_ID` - Main channel ID for membership verification
+- `CHANNEL_LINK` - Main channel invite link
+- `BASE_CHANNEL_ID` - Base channel ID where all files (photos/videos) are posted
+- `BASE_CHANNEL_LINK` - Base channel invite link
+- `SUPERADMIN_ID` - Telegram user ID for superadmin
+- `TG_BOT_TOKEN` - Bot token from @BotFather
 
 ### 5. Run the Bot
 ```bash

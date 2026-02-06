@@ -1,7 +1,3 @@
-// User model for PostgreSQL
-// This is a simple class representation of a User
-// The actual table is created in config.js
-
 export class User {
     constructor(data) {
         this.id = data.id;
@@ -18,13 +14,11 @@ export class User {
         this.updatedAt = data.updated_at || data.updatedAt;
     }
 
-    // Convert snake_case DB fields to camelCase
     static fromDB(row) {
         if (!row) return null;
         return new User(row);
     }
 
-    // Convert camelCase to snake_case for DB
     toDB() {
         return {
             telegram_id: this.telegramId,
